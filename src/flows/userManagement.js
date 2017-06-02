@@ -11,7 +11,7 @@ module.exports = (app) => {
             if(roleList == null)
                 msg.say("Nothing Found!")
             else
-                msg.say(roleList)
+                msg.say("Current " + role + " list: " + roleList)
         })
     })
 
