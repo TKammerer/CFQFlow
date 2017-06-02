@@ -15,7 +15,7 @@ module.exports = (app) => {
     })
 
     slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        var uName = GetUserName(slapp, msg);
+        var uName = GetUserName(msg);
 
         var roleList = [];
 
