@@ -15,43 +15,22 @@ module.exports = (app) => {
     })
 
     slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        let userObj = GetUserName(msg);
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-        if(userObj.error)
-            return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
+            var roleList = [];
 
-        var roleList = [];
+            roleList.push(data.user.name);
 
-        roleList.push(userObj.text);
+            kv.set(role, roleList, (err, role) => {
+                if (err) return handleError(err, msg)
+            })
 
-        kv.set(role, roleList, (err, role) => {
-            if (err) return handleError(err, msg)
+            var roleList = kv.get(role, (err, role) => {
+                if (err) return handleError(err, msg)
+            })
+
+            msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + roleList)
         })
-
-        var roleList = kv.get(role, (err, role) => {
-            if (err) return handleError(err, msg)
-        })
-
-        msg.say("Added " + userObj.text + " to role " + role).say("Current " + role + " list: " + roleList)
-    })
-  
-    function GetUserName(msg) {
-        let userObj = null;
-
-        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-            if (err){
-                userObj.error = true;
-                userObj.text = `Sorry, something went wrong. Try again? (${err.message || err})`;
-            }
-            userObj.error = false;
-            userObj.text = data.user.name; 
-        })
-
-        return userObj;
-    }
-
-  return {}
-}
 
 function handleError (err, msg) {
   console.error(err)
