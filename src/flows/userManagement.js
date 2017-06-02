@@ -5,13 +5,14 @@ module.exports = (app) => {
   let kv = app.kv
 
     slapp.message('view (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        let roleList = kv.get(role, (err, role) => {
+        kv.get(role, (err, roleList) => {
             if (err) return handleError(err, msg)
+
+            if(roleList == null)
+                msg.say("Nothing Found!")
+            else
+                msg.say(role)
         })
-        if(roleList == null)
-            msg.say("Nothing Found!")
-        else
-            msg.say(role)
     })
 
     slapp.message('add myself (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
