@@ -15,11 +15,14 @@ module.exports = (app) => {
     })
 
     slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        var uName = GetUserName(msg);
+        let userObj = GetUserName(msg);
+
+        if(userObj.error)
+            return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
 
         var roleList = [];
 
-        roleList.push(uName);
+        roleList.push(userObj.text);
 
         kv.set(role, roleList, (err, role) => {
             if (err) return handleError(err, msg)
@@ -29,13 +32,21 @@ module.exports = (app) => {
             if (err) return handleError(err, msg)
         })
 
-        msg.say("Added " + uName + " to role " + role).say("Current " + role + " list: " + roleList)
+        msg.say("Added " + userObj.text + " to role " + role).say("Current " + role + " list: " + roleList)
     })
   
     function GetUserName(msg) {
+        let userObj = null;
+
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-            return data.user.name; 
+            if (err){
+                userObj.error = true;
+                userObj.text = `Sorry, something went wrong. Try again? (${err.message || err})`;
+            }
+            userObj.text = data.user.name; 
         })
+
+        return userObj;
     }
 
   return {}
