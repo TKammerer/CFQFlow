@@ -17,7 +17,11 @@ module.exports = (app) => {
     slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         var uname = GetUserName(slapp, msg);
 
-        kv.set(role, uname, (err, role) => {
+        var roleList = [];
+
+        roleList.push(uName);
+
+        kv.set(role, roleList, (err, role) => {
             if (err) return handleError(err, msg)
         })
 
@@ -49,7 +53,11 @@ function handleError (err, msg) {
 
 
 function GetUserName(slapp, msg) {
+    let uName = null
+
     slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-        return data.user.name; 
+        uName = data.user.name; 
     })
+
+    return uName;
 }
