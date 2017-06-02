@@ -3,7 +3,11 @@
 module.exports = (app) => {
   let slapp = app.slapp
 
-  let help = `I don't have any help yet :(`
+  let help = `
+  view (owners|reviewers|developers)
+  add myself (owners|reviewers|developers)
+  remove myself (owners|reviewers|developers)
+  `
 
   slapp.command('/cfq', /^\s*help\s*$/, (msg) => {
     msg.respond(help)
