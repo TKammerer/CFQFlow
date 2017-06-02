@@ -43,6 +43,7 @@ module.exports = (app) => {
                 userObj.error = true;
                 userObj.text = `Sorry, something went wrong. Try again? (${err.message || err})`;
             }
+            userObj.error = false;
             userObj.text = data.user.name; 
         })
 
