@@ -5,7 +5,7 @@ const Slapp = require('slapp')
 const ConvoStore = require('slapp-convo-beepboop')
 const Context = require('slapp-context-beepboop')
 const BeepBoopPersist = require('beepboop-persist')
-const config = require('./src/config')
+const config = require('./src/config').validate()
 
 // use `PORT` env var on Beep Boop - default to 3000 locally
 var port = process.env.PORT || 3000
