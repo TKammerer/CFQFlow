@@ -17,17 +17,21 @@ module.exports = (app) => {
     slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-            let roleList = [];
+            kv.get(role, (err, roleList) => {
+            
+                if(roleList == null)
+                    rolelist = [];
 
-            roleList.push(data.user.name);
+                roleList.push(data.user.name);
 
-            kv.set(role, roleList, (err) => {
-                if (err) return handleError(err, msg)
-                
-                kv.get(role, (err, updatedRoleList) => {
+                kv.set(role, roleList, (err) => {
                     if (err) return handleError(err, msg)
+                    
+                    kv.get(role, (err, updatedRoleList) => {
+                        if (err) return handleError(err, msg)
 
-                    msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
+                        msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
+                    })
                 })
             })
         })
