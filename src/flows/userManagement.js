@@ -32,6 +32,12 @@ module.exports = (app) => {
         msg.say("Added " + uName + " to role " + role).say("Current " + role + " list: " + roleList)
     })
   
+    function GetUserName(msg) {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
+            return data.user.name; 
+        })
+    }
+
   return {}
 }
 
@@ -49,11 +55,4 @@ function handleError (err, msg) {
   }, (err) => {
     if (err) console.error('Error handling error:', err)
   })
-}
-
-
-function GetUserName(slapp, msg) {
-    slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-        return data.user.name; 
-    })
 }
