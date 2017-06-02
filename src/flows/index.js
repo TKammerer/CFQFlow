@@ -4,7 +4,7 @@
 module.exports = (app) => {
   app.flows = {
     help: require('./help')(app),
-    // whoisin: require('./whoisin')(app),
+    userManagement: require('./userManagement')(app),
     // chatter: require('./chatter')(app)
   }
 }
