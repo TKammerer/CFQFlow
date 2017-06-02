@@ -31,19 +31,22 @@ module.exports = (app) => {
 
             msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + roleList)
         })
+    })
 
-function handleError (err, msg) {
-  console.error(err)
+    function handleError (err, msg) {
+    console.error(err)
 
-  // Only show errors when we can respond with an ephemeral message
-  // So this includes any button actions or slash commands
-  if (!msg.body.response_url) return
+    // Only show errors when we can respond with an ephemeral message
+    // So this includes any button actions or slash commands
+    if (!msg.body.response_url) return
 
-  msg.respond({
-    text: `:scream: Uh Oh: ${err.message || err}`,
-    response_type: 'ephemeral',
-    replace_original: false
-  }, (err) => {
-    if (err) console.error('Error handling error:', err)
-  })
+    msg.respond({
+        text: `:scream: Uh Oh: ${err.message || err}`,
+        response_type: 'ephemeral',
+        replace_original: false
+    }, (err) => {
+        if (err) console.error('Error handling error:', err)
+    })
+    }
+
 }
