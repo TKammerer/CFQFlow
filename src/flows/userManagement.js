@@ -13,6 +13,20 @@ module.exports = (app) => {
         else
             msg.say(role)
     })
+
+    slapp.message('add myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+        var uname = GetUserName(msg);
+
+        kv.set(role, uname, (err, role) => {
+            if (err) return handleError(err, msg)
+        })
+
+        var roleList = kv.get(role, (err, role) => {
+            if (err) return handleError(err, msg)
+        })
+
+        msg.say("Added " + uname + " to role " + role).say("Current " + role + " list: " + roleList)
+    })
   
   return {}
 }
@@ -31,4 +45,11 @@ function handleError (err, msg) {
   }, (err) => {
     if (err) console.error('Error handling error:', err)
   })
+}
+
+
+function GetUserName(msg) {
+    slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
+        return data.user.name; 
+    })
 }
