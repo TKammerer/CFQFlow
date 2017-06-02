@@ -35,7 +35,7 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
 })
 
 slapp.message('who am i', ['mention', 'direct_message'], (msg) => {
-  msg.say(msg.body.event.user)
+  msg.say(msg.body.user_name)
 })
 
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
