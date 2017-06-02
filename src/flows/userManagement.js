@@ -37,6 +37,31 @@ module.exports = (app) => {
         })
     })
 
+        slapp.message('remove myself (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+
+            kv.get(role, (err, roleList) => {
+            
+                if(roleList == null)
+                    rolelist = [];
+
+                var index = rolelist.indexOf(data.user.name)
+                    if(index !== -1)
+                        rolelist.splice(index, 1);
+
+                kv.set(role, roleList, (err) => {
+                    if (err) return handleError(err, msg)
+                    
+                    kv.get(role, (err, updatedRoleList) => {
+                        if (err) return handleError(err, msg)
+
+                        msg.say("Removed " + data.user.name + " from role " + role).say("Current " + role + " list: " + updatedRoleList)
+                    })
+                })
+            })
+        })
+    })
+
     function handleError (err, msg) {
     console.error(err)
 
