@@ -45,9 +45,9 @@ module.exports = (app) => {
                 if(roleList == null)
                     rolelist = [];
 
-                var index = rolelist.indexOf(data.user.name)
+                let index = roleList.indexOf(data.user.name)
                     if(index !== -1)
-                        rolelist.splice(index, 1);
+                        roleList.splice(index, 1);
 
                 kv.set(role, roleList, (err) => {
                     if (err) return handleError(err, msg)
