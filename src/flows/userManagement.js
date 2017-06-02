@@ -21,15 +21,15 @@ module.exports = (app) => {
 
             roleList.push(data.user.name);
 
-            kv.set(role, roleList, (err, role) => {
+            kv.set(role, roleList, (err) => {
                 if (err) return handleError(err, msg)
-            })
+                
+                kv.get(role, (err, updatedRoleList) => {
+                    if (err) return handleError(err, msg)
 
-            let updatedRoleList = kv.get(role, (err, role) => {
-                if (err) return handleError(err, msg)
+                    msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
+                })
             })
-
-            msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
         })
     })
 
