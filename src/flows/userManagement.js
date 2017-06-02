@@ -53,11 +53,7 @@ function handleError (err, msg) {
 
 
 function GetUserName(slapp, msg) {
-    let uName = null
-
     slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-        uName = data.user.name; 
+        return data.user.name; 
     })
-
-    return uName;
 }
