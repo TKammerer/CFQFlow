@@ -13,14 +13,15 @@ module.exports = (app) => {
     msg.say(help)
   })
 
-  slapp.message('who am i', ['mention', 'direct_message'], (msg) => {
-      
-      
-      slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
-          if (err) return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
-          msg.say(data.user.profile.real_name).say(data.user.name)
-         })
+  slapp.message('who am i', ['mention', 'direct_message'], (msg) => {    
+    let uName = null;
+
+    slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
+        if (err) return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
+        uName = data.user.name;
+        })
+    msg.say(uName)
   })
-  
+
   return {}
 }
