@@ -17,10 +17,12 @@ module.exports = (app) => {
     slapp.message('add myself (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-            kv.get(role, (err, roleList) => {
+            kv.get(role, (err, dbRoleList) => {
             
-                if(roleList == null)
-                    rolelist = [];
+                let roleList = [];
+
+                if(roleList != null)
+                    rolelist = dbRoleList;
 
                 roleList.push(data.user.name);
 
@@ -40,10 +42,12 @@ module.exports = (app) => {
     slapp.message('remove myself (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-            kv.get(role, (err, roleList) => {
+            kv.get(role, (err, dbRoleList) => {
             
-                if(roleList == null)
-                    rolelist = [];
+                let roleList = [];
+
+                if(roleList != null)
+                    rolelist = dbRoleList;
 
                 let index = roleList.indexOf(data.user.name)
                     if(index !== -1)
