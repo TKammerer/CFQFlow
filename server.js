@@ -35,8 +35,12 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
 })
 
 slapp.message('who am i', ['mention', 'direct_message'], (msg) => {
-      msg.say(`Body: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
-      .say(`Meta: \`\`\`${JSON.stringify(msg.meta)}\`\`\``)
+      
+      
+      slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
+          if (err) return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
+          msg.say(data.user.profile.real_name).say(data.user.name)
+         })
 })
 
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
