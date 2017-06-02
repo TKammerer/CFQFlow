@@ -22,7 +22,7 @@ module.exports = (app) => {
                 let roleList = [];
 
                 if(roleList != null)
-                    rolelist = dbRoleList;
+                    roleList = dbRoleList;
 
                 roleList.push(data.user.name);
 
@@ -47,7 +47,7 @@ module.exports = (app) => {
                 let roleList = [];
 
                 if(roleList != null)
-                    rolelist = dbRoleList;
+                    roleList = dbRoleList;
 
                 let index = roleList.indexOf(data.user.name)
                     if(index !== -1)
