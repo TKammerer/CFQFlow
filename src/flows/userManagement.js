@@ -29,7 +29,7 @@ module.exports = (app) => {
             if (err) return handleError(err, msg)
         })
 
-        msg.say("Added " + uname + " to role " + role).say("Current " + role + " list: " + roleList)
+        msg.say("Added " + uName + " to role " + role).say("Current " + role + " list: " + roleList)
     })
   
   return {}
