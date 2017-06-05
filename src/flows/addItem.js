@@ -47,6 +47,10 @@ module.exports = (app) => {
 
         msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
 
+        roleList.forEach(function(element){
+            msg.say('@'+element + ' Please Review ' + state.title)
+        })
+
         //at mention all reviewers here
     })
   })
