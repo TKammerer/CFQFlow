@@ -65,7 +65,7 @@ module.exports = (app) => {
     })
   })
 
-    slapp.message('(qa/dev) review', 'mention', (msg, text, role) => {
+    slapp.message('(qa|dev) review', 'mention', (msg, text, role) => {
         let answer = false;
 
         var answerPos = text.lastIndexOf("yes")
