@@ -51,7 +51,7 @@ module.exports = (app) => {
 
         roleList.forEach(function(element){
             msg.say('@'+element + ' ' + state.title + ' changes do not require QA or have automated test coverage?')
-            msg.say('@'+element + ' Please reply "qa review ' + state.title + 'yes/no" ?')
+            msg.say('@'+element + ' Please reply "qa review ' + state.title + ' yes/no"')
         })
         
         kv.get("dev reviewers", (err, roleList) => {
@@ -59,11 +59,19 @@ module.exports = (app) => {
 
             roleList.forEach(function(element){
                 msg.say('@'+element + ' ' + state.title + ' changes constainted to one system?')
-                msg.say('@'+element + ' Please reply "dev review ' + state.title + 'yes/no" ?')
+                msg.say('@'+element + ' Please reply "dev review ' + state.title + ' yes/no"')
             })
         })
     })
   })
+
+    slapp.message('qa review', 'mention', (msg) => {
+        msg.say(msg.body)
+    })
+
+    slapp.message('dev review', 'mention', (msg) => {
+        msg.say(msg.body)
+    })
 
     function handleError (err, msg) {
     console.error(err)
