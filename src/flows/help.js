@@ -7,6 +7,7 @@ module.exports = (app) => {
   view (owners|reviewers|developers)
   add myself (owners|reviewers|developers)
   remove myself (owners|reviewers|developers)
+  new item (owners only)
   `
 
   slapp.command('/cfq', /^\s*help\s*$/, (msg) => {
