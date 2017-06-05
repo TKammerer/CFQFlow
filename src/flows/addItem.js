@@ -5,10 +5,16 @@ module.exports = (app) => {
   let kv = app.kv
 
     slapp.message('new item', ['direct_mention', 'direct_message'], (msg, text, role) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+            kv.get("owners", (err, roleList) => {
+                if (err) return handleError(err, msg)
 
-        //Do a check for owner group!
-
-        msg.say(`Title?`).route('new-item-title', { greeting: text })
+                if(roleList.indexOf(data.user.name) !== -1)
+                    msg.say(`Title?`).route('new-item-title', { greeting: text })
+                else
+                    msg.say("Must be owner!")
+            })
+        })
     })
     .route('new-item-title', (msg, state) => {
 
@@ -36,9 +42,7 @@ module.exports = (app) => {
 
     state.desc = text
 
-    msg
-      .say('Thanks!')
-      .say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
+    msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
   })
 
     function handleError (err, msg) {
