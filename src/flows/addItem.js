@@ -65,8 +65,7 @@ module.exports = (app) => {
     })
   })
 
-    slapp.message('qa review', 'mention', (msg) => {
-        let text = msg.body.event.text
+    slapp.message('(qa/dev) review', 'mention', (msg, text, role) => {
         let answer = false;
 
         var answerPos = text.lastIndexOf("yes")
@@ -86,11 +85,7 @@ module.exports = (app) => {
 
         let question = text.slice(reviewPos + 6, answerPos).trim()
 
-        msg.say("Question: " + question).say("Answer: " + answer.toString())
-    })
-
-    slapp.message('dev review', 'mention', (msg) => {
-        msg.say(msg.body.event.text)
+        msg.say("Question: " + question).say("Answer: " + answer.toString()).say("Role: " + role)
     })
 
     function handleError (err, msg) {
