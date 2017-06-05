@@ -4,7 +4,7 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
-    slapp.message('view (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('view (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         kv.get(role, (err, roleList) => {
             if (err) return handleError(err, msg)
 
@@ -15,7 +15,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('add myself (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('add myself (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
             kv.get(role, (err, dbRoleList) => {
@@ -40,7 +40,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('remove myself (owners|reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('remove myself (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
             kv.get(role, (err, dbRoleList) => {

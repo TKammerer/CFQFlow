@@ -4,9 +4,9 @@ module.exports = (app) => {
   let slapp = app.slapp
 
   let help = `
-  view (owners|reviewers|developers)
-  add myself (owners|reviewers|developers)
-  remove myself (owners|reviewers|developers)
+  view (owners|qa reviewers|dev reviewers|developers)
+  add myself (owners|qa reviewers|dev reviewers|developers)
+  remove myself (owners|qa reviewers|dev reviewers|developers)
   new item (owners only)
   `
 

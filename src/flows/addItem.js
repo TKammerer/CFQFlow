@@ -42,7 +42,7 @@ module.exports = (app) => {
 
     state.desc = text
 
-    kv.get("reviewers", (err, roleList) => {
+    kv.get("qa reviewers", (err, roleList) => {
         if (err) return handleError(err, msg)
 
         msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
@@ -50,8 +50,14 @@ module.exports = (app) => {
         roleList.forEach(function(element){
             msg.say('@'+element + ' Please Review ' + state.title)
         })
+        
+        kv.get("dev reviewers", (err, roleList) => {
+            if (err) return handleError(err, msg)
 
-        //at mention all reviewers here
+            roleList.forEach(function(element){
+                msg.say('@'+element + ' Please Review ' + state.title)
+            })
+        })
     })
   })
 
