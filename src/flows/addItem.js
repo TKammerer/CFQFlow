@@ -42,7 +42,13 @@ module.exports = (app) => {
 
     state.desc = text
 
-    msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
+    kv.get("reviewers", (err, roleList) => {
+        if (err) return handleError(err, msg)
+
+        msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
+
+        //at mention all reviewers here
+    })
   })
 
     function handleError (err, msg) {
