@@ -47,15 +47,19 @@ module.exports = (app) => {
 
         msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
 
+        msg.say()
+
         roleList.forEach(function(element){
-            msg.say('@'+element + ' Please Review ' + state.title)
+            msg.say('@'+element + ' ' + state.title + ' changes do not require QA or have automated test coverage?')
+            msg.say('@'+element + ' Please reply "qa review ' + state.title + 'yes/no" ?')
         })
         
         kv.get("dev reviewers", (err, roleList) => {
             if (err) return handleError(err, msg)
 
             roleList.forEach(function(element){
-                msg.say('@'+element + ' Please Review ' + state.title)
+                msg.say('@'+element + ' ' + state.title + ' changes constainted to one system?')
+                msg.say('@'+element + ' Please reply "dev review ' + state.title + 'yes/no" ?')
             })
         })
     })
