@@ -65,27 +65,29 @@ module.exports = (app) => {
     })
   })
 
-    slapp.message('(qa|dev) review', 'mention', (msg, text, role) => {
-        let answer = false;
+    slapp.message('(qa|dev) review (.*) (yes|no)', 'mention', (msg, text, role, item, answer) => {
+        // let answer = false;
 
-        var answerPos = text.lastIndexOf("yes")
+        // var answerPos = text.lastIndexOf("yes")
 
-        if(answerPos === -1) {
-            answerPos = text.lastIndexOf("no")
-            if(answerPos === -1){
-                msg.say("I cannot find your answer in" + text)
-                return
-            }
-        }
-        else{
-            answer = true;
-        }   
+        // if(answerPos === -1) {
+        //     answerPos = text.lastIndexOf("no")
+        //     if(answerPos === -1){
+        //         msg.say("I cannot find your answer in" + text)
+        //         return
+        //     }
+        // }
+        // else{
+        //     answer = true;
+        // }   
 
-        var reviewPos = text.indexOf("review")
+        // var reviewPos = text.indexOf("review")
 
-        let question = text.slice(reviewPos + 6, answerPos).trim()
+        // let question = text.slice(reviewPos + 6, answerPos).trim()
 
-        msg.say("Question: " + question).say("Answer: " + answer.toString()).say("Role: " + role)
+        //msg.say("Question: " + question).say("Answer: " + answer.toString()).say("Role: " + role)
+
+        msg.say("text: " + text).say("role: " + role).say("item: " + item).say("answer: " + answer)
     })
 
     function handleError (err, msg) {
