@@ -66,7 +66,27 @@ module.exports = (app) => {
   })
 
     slapp.message('qa review', 'mention', (msg) => {
-        msg.say(msg.body.event.text)
+        let text = msg.body.event.text
+        let answer = false;
+
+        var answerPos = text.lastIndexOf("yes")
+
+        if(answerPos === -1) {
+            answerPos = text.lastIndexOf("no")
+            if(answerPos === -1){
+                msg.say("I cannot find your answer in" + text)
+                return
+            }
+        }
+        else{
+            answer = true;
+        }   
+
+        var reviewPos = text.indexOf("review")
+
+        let question = text.slice(reviewPos, answerPos)
+
+        msg.say("Question: " + question).say("Answer: " + answer.toString())
     })
 
     slapp.message('dev review', 'mention', (msg) => {
