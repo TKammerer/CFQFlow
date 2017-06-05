@@ -84,7 +84,7 @@ module.exports = (app) => {
 
         var reviewPos = text.indexOf("review")
 
-        let question = text.slice(reviewPos, answerPos)
+        let question = text.slice(reviewPos, answerPos).trim()
 
         msg.say("Question: " + question).say("Answer: " + answer.toString())
     })
