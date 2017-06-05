@@ -66,11 +66,11 @@ module.exports = (app) => {
   })
 
     slapp.message('qa review', 'mention', (msg) => {
-        msg.say(msg.body.text)
+        msg.say(msg.body.event.text)
     })
 
     slapp.message('dev review', 'mention', (msg) => {
-        msg.say(msg.body.text)
+        msg.say(msg.body.event.text)
     })
 
     function handleError (err, msg) {
