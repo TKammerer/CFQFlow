@@ -4,6 +4,35 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
+    slapp.message('remove work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+
+            kv.get("workItems", (err, dbworkItemList) => {
+            
+                let workItemList = [];
+
+                if(dbworkItemList != null)
+                    workItemList = dbworkItemList;
+
+                var workItem = workItemList.find(x => x.title === workItemTitle)
+
+                let index = workItemList.indexOf(workItem)
+                if(index !== -1)
+                    workItemList.splice(index, 1);
+
+                kv.set("workItems", workItemList, (err) => {
+                    if (err) return handleError(err, msg)
+                    
+                    kv.get("workItems", (err, updatedWorkItemList) => {
+                        if (err) return handleError(err, msg)
+
+                        msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: \n'''" + updatedWorkItemList + "'''")
+                    })
+                })
+            })
+        })
+    })
+
     slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
         kv.get("workItems", (err, workItemList) => {
             if (err) return handleError(err, msg)
@@ -21,7 +50,7 @@ module.exports = (app) => {
                 if (err) return handleError(err, msg)
 
                 if(roleList.indexOf(data.user.name) !== -1)
-                    msg.say(`Title?`).route('new-item-title', { greeting: text })
+                    msg.say(`Title?`).route('new-item-title', { id: new Date().getTime() })
                 else
                     msg.say("Must be owner!")
             })
