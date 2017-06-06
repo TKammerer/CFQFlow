@@ -5,7 +5,7 @@ module.exports = (app) => {
   let kv = app.kv
 
     slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
-        kv.get(workItems, (err, workItemList) => {
+        kv.get("workItems", (err, workItemList) => {
             if (err) return handleError(err, msg)
 
             if(workItemList == null)
@@ -77,7 +77,7 @@ module.exports = (app) => {
         msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
 
         roleList.forEach(function(element){
-            msg.say('@'+element + ' ' + state.title + ' changes do not require QA or have automated test coverage?')
+            msg.say('@'+element + ' *' + state.title + '* changes do not require QA or have automated test coverage?')
             msg.say('@'+element + ' Please reply "qa review ' + state.title + ' yes/no"')
         })
         
@@ -85,7 +85,7 @@ module.exports = (app) => {
             if (err) return handleError(err, msg)
 
             roleList.forEach(function(element){
-                msg.say('@'+element + ' ' + state.title + ' changes constainted to one system?')
+                msg.say('@'+element + ' *' + state.title + '* changes constainted to one system?')
                 msg.say('@'+element + ' Please reply "dev review ' + state.title + ' yes/no"')
             })
         })
