@@ -151,8 +151,6 @@ module.exports = (app) => {
     slapp.route('handleDevNo', (msg, item) => {
             var text = msg.body.event.text
 
-            msg.say("text: " + text)
-
             kv.get("workItems", (err, dbworkItemList) => {
                 var workItem = dbworkItemList.find(x => x.title === item)
 
@@ -162,6 +160,7 @@ module.exports = (app) => {
 
                 kv.set("workItems", dbworkItemList, (err) => {
                     if (err) return handleError(err, msg)
+                    msg.say("Thanks!")
                 })
             })
     })
@@ -180,8 +179,9 @@ module.exports = (app) => {
                 workItem.rejected = true;
                 workItem.qaReason = text;
 
-                kv.set("workItems", workItemList, (err) => {
+                kv.set("workItems", dbworkItemList, (err) => {
                     if (err) return handleError(err, msg)
+                    msg.say("Thanks!")
                 })
             })
     })
