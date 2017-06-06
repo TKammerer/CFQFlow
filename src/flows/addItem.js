@@ -60,7 +60,7 @@ module.exports = (app) => {
 
         let list = [];
 
-        if(workItemList !== null){
+        if(workItemList != null){
             list = workItemList
         }
 
