@@ -25,8 +25,11 @@ module.exports = (app) => {
                     
                     kv.get("workItems", (err, updatedWorkItemList) => {
                         if (err) return handleError(err, msg)
-
-                        msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: \n'''" + updatedWorkItemList + "'''")
+                        
+                    if(updatedWorkItemList == null)
+                        msg.say("Nothing Found!")
+                    else
+                        msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
                     })
                 })
             })
