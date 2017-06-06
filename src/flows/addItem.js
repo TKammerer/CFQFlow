@@ -89,8 +89,6 @@ module.exports = (app) => {
     }
 
     state.desc = text
-    state.devApproved = false;
-    state.qaApproved = false;
 
     kv.get("workItems", (err, workItemList) => {
         if (err) return handleError(err, msg)
@@ -131,25 +129,63 @@ module.exports = (app) => {
 
     slapp.message('(qa|dev) review (.*) (yes|no)', 'mention', (msg, text, role, item, answer) => {
         msg.say("text: " + text).say("role: " + role).say("item: " + item).say("answer: " + answer) //REMOVE
-        if(answer === 'no'){
-            msg.say("Can you please give a quick explanation for the channel?")
-            return
-        }
 
         if(role === 'dev') {
-            kv.set(role, roleList, (err) => {
-                if (err) return handleError(err, msg)
-                
-                kv.get(role, (err, updatedRoleList) => {
-                    if (err) return handleError(err, msg)
+            if(answer === 'no'){
+                msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', item, 10)
+            }
+            else{
 
-                    msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
-                })
-            })
+            }
         }
         else {
+            if(answer === 'no'){
+                msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', item, 10)
+            }
+            else{
 
+            }
         }
+    })
+
+    slapp.route('handleDevNo', (msg, item) => {
+            var text = (msg.body.event && msg.body.event.text) || ''
+
+            if (!text) {
+                return msg.say("Whoops, I'm still waiting to hear from you.").route('handleDevNo', item, 10)
+            }
+
+            kv.get("workItems", (err, dbworkItemList) => {
+                var workItem = dbworkItemList.find(x => x.title === item)
+
+                workItem.devApproved = false;
+                workItem.rejected = true;
+                workItem.devReason = text;
+
+                kv.set("workItems", workItemList, (err) => {
+                    if (err) return handleError(err, msg)
+                })
+            })
+    })
+
+        slapp.route('handleQANo', (msg, item) => {
+            var text = (msg.body.event && msg.body.event.text) || ''
+
+            if (!text) {
+                return msg.say("Whoops, I'm still waiting to hear from you.").route('handleQANo', item, 10)
+            }
+
+            kv.get("workItems", (err, dbworkItemList) => {
+                var workItem = dbworkItemList.find(x => x.title === item)
+
+                workItem.qaApproved = false;
+                workItem.rejected = true;
+                workItem.qaReason = text;
+
+                kv.set("workItems", workItemList, (err) => {
+                    if (err) return handleError(err, msg)
+                })
+            })
     })
 
     function handleError (err, msg) {
