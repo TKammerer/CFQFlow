@@ -173,7 +173,7 @@ module.exports = (app) => {
         }
         else {
             slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
-                kv.get("owners", (err, roleList) => {
+                kv.get("qa reviewers", (err, roleList) => {
                     if (err) return handleError(err, msg)
 
                     if(roleList.indexOf(data.user.name) !== -1){
