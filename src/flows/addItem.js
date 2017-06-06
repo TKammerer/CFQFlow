@@ -17,7 +17,7 @@ module.exports = (app) => {
                 var workItem = workItemList.find(x => x.title === workItemTitle)
 
                 if(workItem == null){
-                    msg.say("Cannot find " + workItemTitle + "!")
+                    msg.say("Cannot find *" + workItemTitle + "*!")
                     return
                 }
 
