@@ -4,14 +4,14 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
-    slapp.message('view work items', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        kv.get(role, (err, roleList) => {
+    slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
+        kv.get(workItems, (err, workItemList) => {
             if (err) return handleError(err, msg)
 
-            if(roleList == null)
+            if(workItemList == null)
                 msg.say("Nothing Found!")
             else
-                msg.say(`Current Work Items: \`\`\`${JSON.stringify(updatedworkItemList)}\`\`\``)
+                msg.say(`Current Work Items: \`\`\`${JSON.stringify(workItemList)}\`\`\``)
         })
     })
 
