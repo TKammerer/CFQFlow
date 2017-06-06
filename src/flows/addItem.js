@@ -142,10 +142,10 @@ module.exports = (app) => {
 
                     if(workItem.qaApproved) {
                         workItem.accepted = true;
-                        answerText = "Thanks!" + item + " is fully approved!"
+                        answerText = "Thanks! *" + item + "* is fully approved!"
                     }
                     else{
-                        answerText = "Thanks!" + item + " is waiting on QA Review."
+                        answerText = "Thanks! *" + item + "* is waiting on QA Review."
                     }
 
                     kv.set("workItems", dbworkItemList, (err) => {
@@ -169,10 +169,10 @@ module.exports = (app) => {
 
                     if(workItem.qaApproved) {
                         workItem.accepted = true;
-                        answerText = "Thanks!" + item + " is fully approved!"
+                        answerText = "Thanks! *" + item + "* is fully approved!"
                     }
                     else{
-                        answerText = "Thanks!" + item + " is waiting on Dev Review."
+                        answerText = "Thanks! *" + item + "* is waiting on Dev Review."
                     }
 
                     kv.set("workItems", dbworkItemList, (err) => {
