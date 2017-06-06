@@ -128,14 +128,31 @@ module.exports = (app) => {
   })
 
     slapp.message('(qa|dev) review (.*) (yes|no)', 'mention', (msg, text, role, item, answer) => {
-        //msg.say("text: " + text).say("role: " + role).say("item: " + item).say("answer: " + answer) //REMOVE
-
         if(role === 'dev') {
             if(answer === 'no'){
                 msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', item)
             }
             else{
+                kv.get("workItems", (err, dbworkItemList) => {
+                    var workItem = dbworkItemList.find(x => x.title === item)
 
+                    workItem.devApproved = true;
+
+                    let answerText = "Thanks!";
+
+                    if(workItem.qaApproved) {
+                        workItem.accepted = true;
+                        answerText = "Thanks!" + item + " is fully approved!"
+                    }
+                    else{
+                        answerText = "Thanks!" + item + " is waiting on QA Review."
+                    }
+
+                    kv.set("workItems", dbworkItemList, (err) => {
+                        if (err) return handleError(err, msg)
+                        msg.say(answerText)
+                    })
+                })
             }
         }
         else {
@@ -143,7 +160,26 @@ module.exports = (app) => {
                 msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', item)
             }
             else{
+                kv.get("workItems", (err, dbworkItemList) => {
+                    var workItem = dbworkItemList.find(x => x.title === item)
 
+                    workItem.qaApproved = true;
+
+                    let answerText = "Thanks!";
+
+                    if(workItem.qaApproved) {
+                        workItem.accepted = true;
+                        answerText = "Thanks!" + item + " is fully approved!"
+                    }
+                    else{
+                        answerText = "Thanks!" + item + " is waiting on Dev Review."
+                    }
+
+                    kv.set("workItems", dbworkItemList, (err) => {
+                        if (err) return handleError(err, msg)
+                        msg.say(answerText)
+                    })
+                })
             }
         }
     })
