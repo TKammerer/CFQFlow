@@ -16,6 +16,11 @@ module.exports = (app) => {
 
                 var workItem = workItemList.find(x => x.title === workItemTitle)
 
+                if(workItem == null){
+                    msg.say("Cannot find " + workItemTitle + "!")
+                    return
+                }
+
                 let index = workItemList.indexOf(workItem)
                 if(index !== -1)
                     workItemList.splice(index, 1);
