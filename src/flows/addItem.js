@@ -189,7 +189,7 @@ module.exports = (app) => {
 
                                 let answerText = "Thanks!";
 
-                                if(workItem.qaApproved) {
+                                if(workItem.devApproved) {
                                     workItem.accepted = true;
                                     answerText = "Thanks! *" + item + "* is fully approved!"
                                 }
