@@ -132,7 +132,7 @@ module.exports = (app) => {
 
         if(role === 'dev') {
             if(answer === 'no'){
-                msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', item, 10)
+                msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', item)
             }
             else{
 
@@ -140,7 +140,7 @@ module.exports = (app) => {
         }
         else {
             if(answer === 'no'){
-                msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', item, 10)
+                msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', item)
             }
             else{
 
@@ -153,10 +153,6 @@ module.exports = (app) => {
 
             msg.say("text: " + text)
 
-            if (!text) {
-                return msg.say("Whoops, I'm still waiting to hear from you.").route('handleDevNo', item, 10)
-            }
-
             kv.get("workItems", (err, dbworkItemList) => {
                 var workItem = dbworkItemList.find(x => x.title === item)
 
@@ -164,7 +160,7 @@ module.exports = (app) => {
                 workItem.rejected = true;
                 workItem.devReason = text;
 
-                kv.set("workItems", workItemList, (err) => {
+                kv.set("workItems", dbworkItemList, (err) => {
                     if (err) return handleError(err, msg)
                 })
             })
@@ -174,7 +170,7 @@ module.exports = (app) => {
             var text = (msg.body.event && msg.body.event.text) || ''
 
             if (!text) {
-                return msg.say("Whoops, I'm still waiting to hear from you.").route('handleQANo', item, 10)
+                return msg.say("Whoops, I'm still waiting to hear from you.").route('handleQANo', item)
             }
 
             kv.get("workItems", (err, dbworkItemList) => {
