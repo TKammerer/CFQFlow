@@ -128,7 +128,7 @@ module.exports = (app) => {
   })
 
     slapp.message('(qa|dev) review (.*) (yes|no)', 'mention', (msg, text, role, item, answer) => {
-        msg.say("text: " + text).say("role: " + role).say("item: " + item).say("answer: " + answer) //REMOVE
+        //msg.say("text: " + text).say("role: " + role).say("item: " + item).say("answer: " + answer) //REMOVE
 
         if(role === 'dev') {
             if(answer === 'no'){
@@ -149,7 +149,9 @@ module.exports = (app) => {
     })
 
     slapp.route('handleDevNo', (msg, item) => {
-            var text = (msg.body.event && msg.body.event.text) || ''
+            var text = msg.body.event.text
+
+            msg.say("text: " + text)
 
             if (!text) {
                 return msg.say("Whoops, I'm still waiting to hear from you.").route('handleDevNo', item, 10)
