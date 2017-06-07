@@ -145,7 +145,7 @@ module.exports = (app) => {
                             var workItem = dbworkItemList.find(x => x.title === item)
 
                             if(workItem.devApproved != null) {
-                                msg.say("*" + item + "* has already been reviewed. Result: " + (workItem.devApproved ? "Yes" : "No"))
+                                msg.say("*" + item + "* has already been reviewed. Result: " + (workItem.devApproved ? "Approved" : "Rejected"))
                             }
                             else if(answer === 'no'){
                                 let handleNoDTO = { title: item, uName:data.user.name }
@@ -185,14 +185,17 @@ module.exports = (app) => {
                     if (err) return handleError(err, msg)
 
                     if(roleList.indexOf(data.user.name) !== -1){
-                        if(answer === 'no'){
-                            let handleNoDTO = { title: item, uName:data.user.name }
-                            msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', handleNoDTO)
-                        }
-                        else{
-                            kv.get("workItems", (err, dbworkItemList) => {
-                                var workItem = dbworkItemList.find(x => x.title === item)
+                        kv.get("workItems", (err, dbworkItemList) => {
+                            var workItem = dbworkItemList.find(x => x.title === item)
 
+                            if(workItem.qaApproved != null) {
+                                msg.say("*" + item + "* has already been reviewed. Result: " + (workItem.qaApproved ? "Approved" : "Rejected"))
+                            }
+                            else if(answer === 'no'){
+                                let handleNoDTO = { title: item, uName:data.user.name }
+                                msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', handleNoDTO)
+                            }
+                            else{
                                 workItem.qaApproved = true;
                                 workItem.qaApprover = data.user.name;
                                 let answerText = "Thanks!";
@@ -212,8 +215,8 @@ module.exports = (app) => {
                                     if (err) return handleError(err, msg)
                                     msg.say(answerText)
                                 })
-                            })
-                        }
+                            }
+                        })
                     }
                     else
                         msg.say("Must be QA Reviewer!")
