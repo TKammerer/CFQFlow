@@ -12,7 +12,7 @@ module.exports = (app) => {
             msg.say("```A developer who is assigned to work on CFQ work items. This can be anyone, but to be assigned to this role, this person *MUST NOT* be included in the pool of people working on TCQ delivery.```")
         }
         if(role === "reviewer") {
-            msg.say("```A pairing of a developer and a QA team member, with two primary responsibilities:\n\n 1. Ensure that the work items submitted for the CFQ comply with the requirements for safely delivering work via the CFQ\n\n 2. Evaluate submitted change requests to ensure that the proposed changes are high quality and can be safely merged and deployed to prod\n\n This team will be staffed with a developer and QA member from the primary ecommerce delivery team, and will be rotated out every two weeks.```")
+            msg.say("```A pairing of a developer and a QA team member, with two primary responsibilities:\n\n\t1. Ensure that the work items submitted for the CFQ comply with the requirements for safely delivering work via the CFQ\n\n\t2. Evaluate submitted change requests to ensure that the proposed changes are high quality and can be safely merged and deployed to prod\n\nThis team will be staffed with a developer and QA member from the primary ecommerce delivery team, and will be rotated out every two weeks.```")
         }
     })
 
