@@ -54,8 +54,12 @@ module.exports = (app) => {
 
             if(workItemList == null)
                 msg.say("Nothing Found!")
-            else
-                msg.say(`Current Work Items: \`\`\`${JSON.stringify(workItemList)}\`\`\``)
+            else {
+                msg.say("Current Work Items:")
+                workItemList.forEach(function(element){
+                    msg.say(`\`\`\`${JSON.stringify(workItemList)}\`\`\`\n`)
+                })
+            }
         })
     })
 
