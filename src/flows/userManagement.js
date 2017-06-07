@@ -66,9 +66,6 @@ module.exports = (app) => {
                     if(index !== -1)
                         roleList.splice(index, 1);
 
-                let index1 = roleList.indexOf("cvogles")
-                roleList.splice(index1, 1);
-
                 kv.set(role, roleList, (err) => {
                     if (err) return handleError(err, msg)
                     
