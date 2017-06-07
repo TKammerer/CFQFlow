@@ -4,6 +4,18 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
+    slapp.message('view (owner|reviewer|developer) role', ['direct_mention', 'direct_message'], (msg, text, role) => {
+        if(role === "owner") {
+            msg.say("'''A small, predefined list of people who decide what work items are submitted to the CFQ, and what items are worked on. By limiting this list to a small number of people, it will serve to streamline and clarify the process of how things get into the CFQ, and who is responsible for deciding what gets worked on in the CFQ'''")
+        }
+        if(role === "developer") {
+            msg.say("'''A developer who is assigned to work on CFQ work items. This can be anyone, but to be assigned to this role, this person *MUST NOT* be included in the pool of people working on TCQ delivery.'''")
+        }
+        if(role === "reviewer") {
+            msg.say("'''A pairing of a developer and a QA team member, with two primary responsibilities:\n\n 1. Ensure that the work items submitted for the CFQ comply with the requirements for safely delivering work via the CFQ\n\n 2. Evaluate submitted change requests to ensure that the proposed changes are high quality and can be safely merged and deployed to prod\n\n This team will be staffed with a developer and QA member from the primary ecommerce delivery team, and will be rotated out every two weeks.'''")
+        }
+    })
+
     slapp.message('view (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         kv.get(role, (err, roleList) => {
             if (err) return handleError(err, msg)

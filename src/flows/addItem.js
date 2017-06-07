@@ -47,6 +47,7 @@ module.exports = (app) => {
         })
     })
 
+    //Think about the visualization of the json
     slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
         kv.get("workItems", (err, workItemList) => {
             if (err) return handleError(err, msg)
@@ -64,7 +65,7 @@ module.exports = (app) => {
                 if (err) return handleError(err, msg)
 
                 if(roleList.indexOf(data.user.name) !== -1)
-                    msg.say(`Title?`).route('new-item-title', { id: new Date().getTime() })
+                    msg.say(`Title?`).route('new-item-title', { id: new Date().getTime(), uName: data.user.name })
                 else
                     msg.say("Must be owner!")
             })
@@ -141,21 +142,27 @@ module.exports = (app) => {
 
                     if(roleList.indexOf(data.user.name) !== -1){
                         if(answer === 'no'){
-                            msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', item)
+                            let handleQANoDTO = null
+                            handleNoDTO.title = item
+                            handleNoDTO.uName = data.user.name;
+                            msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', handleNoDTO)
                         }
                         else{
                             kv.get("workItems", (err, dbworkItemList) => {
                                 var workItem = dbworkItemList.find(x => x.title === item)
 
                                 workItem.devApproved = true;
-
+                                workItem.devApprover = data.user.name;
                                 let answerText = "Thanks!";
 
                                 if(workItem.qaApproved) {
                                     workItem.accepted = true;
                                     answerText = "Thanks! *" + item + "* is fully approved!"
                                 }
-                                else{
+                                else if (workItem.rejected) {
+                                    answerText = "Unfortunately, *" + item + "* is already rejected by QA."
+                                }
+                                else { 
                                     answerText = "Thanks! *" + item + "* is waiting on QA Review."
                                 }
 
@@ -177,23 +184,28 @@ module.exports = (app) => {
                     if (err) return handleError(err, msg)
 
                     if(roleList.indexOf(data.user.name) !== -1){
-
                         if(answer === 'no'){
-                            msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', item)
+                            let handleQANoDTO = null
+                            handleNoDTO.title = item
+                            handleNoDTO.uName = data.user.name;
+                            msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', handleNoDTO)
                         }
                         else{
                             kv.get("workItems", (err, dbworkItemList) => {
                                 var workItem = dbworkItemList.find(x => x.title === item)
 
                                 workItem.qaApproved = true;
-
+                                workItem.qaApprover = data.user.name;
                                 let answerText = "Thanks!";
 
                                 if(workItem.devApproved) {
                                     workItem.accepted = true;
                                     answerText = "Thanks! *" + item + "* is fully approved!"
                                 }
-                                else{
+                                else if (workItem.rejected) {
+                                    answerText = "Unfortunately, *" + item + "* is already rejected by Dev."
+                                }
+                                else {
                                     answerText = "Thanks! *" + item + "* is waiting on Dev Review."
                                 }
 
@@ -211,36 +223,34 @@ module.exports = (app) => {
         }
     })
 
-    slapp.route('handleDevNo', (msg, item) => {
-            var text = msg.body.event.text
-
-            kv.get("workItems", (err, dbworkItemList) => {
-                var workItem = dbworkItemList.find(x => x.title === item)
-
-                workItem.devApproved = false;
-                workItem.rejected = true;
-                workItem.devReason = text;
-
-                kv.set("workItems", dbworkItemList, (err) => {
-                    if (err) return handleError(err, msg)
-                    msg.say("Thanks!")
-                })
-            })
-    })
-
-    slapp.route('handleQANo', (msg, item) => {
-        var text = (msg.body.event && msg.body.event.text) || ''
-
-        if (!text) {
-            return msg.say("Whoops, I'm still waiting to hear from you.").route('handleQANo', item)
-        }
+    slapp.route('handleDevNo', (msg, handleNoDTO) => {
+        var text = msg.body.event.text
 
         kv.get("workItems", (err, dbworkItemList) => {
-            var workItem = dbworkItemList.find(x => x.title === item)
+            var workItem = dbworkItemList.find(x => x.title === handleNoDTO.title)
+
+            workItem.devApproved = false;
+            workItem.rejected = true;
+            workItem.devReason = text;
+            workItem.devRejector = handleNoDTO.uName
+
+            kv.set("workItems", dbworkItemList, (err) => {
+                if (err) return handleError(err, msg)
+                msg.say("Thanks!")
+            })
+        })
+    })
+
+    slapp.route('handleQANo', (msg, handleNoDTO) => {
+        var text = (msg.body.event && msg.body.event.text) || ''
+
+        kv.get("workItems", (err, dbworkItemList) => {
+            var workItem = dbworkItemList.find(x => x.title === handleNoDTO.title)
 
             workItem.qaApproved = false;
             workItem.rejected = true;
             workItem.qaReason = text;
+            workItem.qaRejector = handleNoDTO.uName
 
             kv.set("workItems", dbworkItemList, (err) => {
                 if (err) return handleError(err, msg)
