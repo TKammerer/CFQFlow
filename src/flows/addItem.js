@@ -57,7 +57,7 @@ module.exports = (app) => {
             else {
                 msg.say("Current Work Items:")
                 workItemList.forEach(function(element){
-                    msg.say(`\`\`\`${JSON.stringify(workItemList)}\`\`\`\n`)
+                    msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
                 })
             }
         })
