@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    //Think about the visualization of the json
+    //Think about the visualization of the jso
     slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
         kv.get("workItems", (err, workItemList) => {
             if (err) return handleError(err, msg)
