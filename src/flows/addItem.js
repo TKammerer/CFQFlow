@@ -141,14 +141,17 @@ module.exports = (app) => {
                     if (err) return handleError(err, msg)
 
                     if(roleList.indexOf(data.user.name) !== -1){
-                        if(answer === 'no'){
-                            let handleNoDTO = { title: item, uName:data.user.name }
-                            msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', handleNoDTO)
-                        }
-                        else{
-                            kv.get("workItems", (err, dbworkItemList) => {
-                                var workItem = dbworkItemList.find(x => x.title === item)
+                        kv.get("workItems", (err, dbworkItemList) => {
+                            var workItem = dbworkItemList.find(x => x.title === item)
 
+                            if(workItem.devApproved != null) {
+                                msg.say("*" + item + "* has already been reviewed. Result: " + workItem.devApproved ? "Yes" : "No")
+                            }
+                            else if(answer === 'no'){
+                                let handleNoDTO = { title: item, uName:data.user.name }
+                                msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', handleNoDTO)
+                            }
+                            else{
                                 workItem.devApproved = true;
                                 workItem.devApprover = data.user.name;
                                 let answerText = "Thanks!";
@@ -168,9 +171,9 @@ module.exports = (app) => {
                                     if (err) return handleError(err, msg)
                                     msg.say(answerText)
                                 })
-                            })
-                        }
-                    }           
+                            }
+                        })
+                    }    
                     else
                         msg.say("Must be Dev Reviewer!")
                 })
