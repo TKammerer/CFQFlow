@@ -65,7 +65,7 @@ module.exports = (app) => {
                 if (err) return handleError(err, msg)
 
                 if(roleList.indexOf(data.user.name) !== -1)
-                    msg.say(`Title?`).route('new-item-title', { id: new Date().getTime(), uName: data.user.name })
+                    msg.say(`Title?`).route('new-item-title', { id: new Date().getTime(), requestorName: data.user.name })
                 else
                     msg.say("Must be owner!")
             })
@@ -142,7 +142,7 @@ module.exports = (app) => {
 
                     if(roleList.indexOf(data.user.name) !== -1){
                         if(answer === 'no'){
-                            let handleQANoDTO = null
+                            let handleNoDTO = null
                             handleNoDTO.title = item
                             handleNoDTO.uName = data.user.name;
                             msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', handleNoDTO)
