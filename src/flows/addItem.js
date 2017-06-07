@@ -145,7 +145,7 @@ module.exports = (app) => {
                             var workItem = dbworkItemList.find(x => x.title === item)
 
                             if(workItem.devApproved != null) {
-                                msg.say("*" + item + "* has already been reviewed. Result: " + workItem.devApproved ? "Yes" : "No")
+                                msg.say("*" + item + "* has already been reviewed. Result: " + (workItem.devApproved ? "Yes" : "No"))
                             }
                             else if(answer === 'no'){
                                 let handleNoDTO = { title: item, uName:data.user.name }
