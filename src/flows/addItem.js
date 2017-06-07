@@ -142,9 +142,7 @@ module.exports = (app) => {
 
                     if(roleList.indexOf(data.user.name) !== -1){
                         if(answer === 'no'){
-                            let handleNoDTO = null
-                            handleNoDTO.title = item
-                            handleNoDTO.uName = data.user.name;
+                            let handleNoDTO = { title: item, uName:data.user.name }
                             msg.say("Can you please give a quick explanation for the channel?").route('handleDevNo', handleNoDTO)
                         }
                         else{
@@ -185,9 +183,7 @@ module.exports = (app) => {
 
                     if(roleList.indexOf(data.user.name) !== -1){
                         if(answer === 'no'){
-                            let handleQANoDTO = null
-                            handleNoDTO.title = item
-                            handleNoDTO.uName = data.user.name;
+                            let handleNoDTO = { title: item, uName:data.user.name }
                             msg.say("Can you please give a quick explanation for the channel?").route('handleQANo', handleNoDTO)
                         }
                         else{
