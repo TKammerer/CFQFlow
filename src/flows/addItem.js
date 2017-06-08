@@ -480,7 +480,7 @@ module.exports = (app) => {
         kv.get("workItems", (err, dbworkItemList) => {
             var workItem = dbworkItemList.find(x => x.title === handleCodeReviewNoDTO.title)
 
-            workItem.codeReviewReason = text;
+            workItem.codeReviewReason = workItem.codeReviewReason + "---" + text;
 
             kv.set("workItems", dbworkItemList, (err) => {
                 if (err) return handleError(err, msg)
