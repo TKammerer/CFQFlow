@@ -69,7 +69,7 @@ module.exports = (app) => {
                 workItemList = dbworkItemList
             }
 
-            if(workItemList == null)
+            if(workItemList.length == 0)
                 msg.say("Nothing Found!")
             else {
                 msg.say("*" + type + "* work items:")
