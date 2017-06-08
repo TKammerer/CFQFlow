@@ -67,7 +67,7 @@ module.exports = (app) => {
             }
             else if(type === "in review") {
                 workItemList = dbworkItemList.filter(function(item){
-                    if(item.inReview)
+                    if(item.inReview && !item.inProgress)
                         return item
                 })
             }
