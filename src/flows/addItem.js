@@ -54,6 +54,7 @@ module.exports = (app) => {
             let workItemList = [];
 
             if(type === "workable") {
+                msg.say("Here")
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.accepted)
                         return item
