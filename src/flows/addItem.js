@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|workable|in progress|in review|complete) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
+    slapp.message('view (all|rejected|workable|in progress|in review|complete) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -74,6 +74,12 @@ module.exports = (app) => {
             else if(type === "complete") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.completed)
+                        return item
+                })
+            }
+            if(type === "rejected") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.rejected)
                         return item
                 })
             }
