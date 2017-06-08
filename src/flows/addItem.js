@@ -53,10 +53,7 @@ module.exports = (app) => {
 
             let workItemList = [];
 
-            msg.say("type: " + type)
-
             if(type === "workable") {
-                msg.say("Here")
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.accepted)
                         return item
@@ -66,11 +63,10 @@ module.exports = (app) => {
                 workItemList = dbworkItemList
             }
 
-
             if(workItemList == null)
                 msg.say("Nothing Found!")
             else {
-                msg.say("Current Work Items:")
+                msg.say("*" + type + "* work items:")
                 workItemList.forEach(function(element){
                     msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
                 })
@@ -282,43 +278,54 @@ module.exports = (app) => {
 
     slapp.message('work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
-            kv.get("owners", (err, roleList) => {
+            kv.get("developers", (err, roleList) => {
                 if (err) return handleError(err, msg)
 
                 if(roleList.indexOf(data.user.name) !== -1){
                     kv.get("workItems", (err, dbworkItemList) => {  
                         let workItemList = [];
 
-                        if(dbworkItemList != null)
-                            workItemList = dbworkItemList;
+                        if(dbworkItemList != null) {
+                            workItemList = dbworkItemList
 
-                        var workItem = workItemList.find(x => x.title === workItemTitle)
+                            var inProgress = workItemList.some(function(item){
+                                return item.inProgress
+                            })
 
-                        if(workItem == null){
-                            msg.say("Cannot find *" + workItemTitle + "*!")
-                            return
-                        }
+                            if(inProgress){
+                                msg.say("WIP Limit Exceeded!")
+                                return
+                            }
 
-                        let index = workItemList.indexOf(workItem)
-                        if(index !== -1)
-                            workItemList.splice(index, 1);
+                            var workItem = workItemList.find(x => x.title === workItemTitle & x.accepted)
 
-                        kv.set("workItems", workItemList, (err) => {
-                            if (err) return handleError(err, msg)
-                            
-                            kv.get("workItems", (err, updatedWorkItemList) => {
+                            if(workItem == null){
+                                msg.say("Cannot find workable item *" + workItemTitle + "*!")
+                                return
+                            }
+
+                            workItem.inProgress = true
+                            workItem.developer = data.user.name
+
+                            kv.set("workItems", workItemList, (err) => {
                                 if (err) return handleError(err, msg)
                                 
-                            if(updatedWorkItemList == null)
-                                msg.say("Nothing Found!")
-                            else
-                                msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
+                                kv.get("workItems", (err, updatedWorkItemList) => {
+                                    if (err) return handleError(err, msg)
+                                    
+                                if(updatedWorkItemList == null)
+                                    msg.say("Nothing Found!")
+                                else
+                                    msg.say("*" + workItemTitle + "* is now in progress").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
+                                })
                             })
-                        })
+                        }
+                        else
+                            msg.say("No Work Items Found!")
                     })
                 }
                 else
-                    msg.say("Must be owner!")
+                    msg.say("Must be Developer!")
             })
         })
     })
