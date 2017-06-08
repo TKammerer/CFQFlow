@@ -55,7 +55,7 @@ module.exports = (app) => {
 
             if(type === "workable") {
                 workItemList = dbworkItemList.filter(function(item){
-                    if(item.accepted && !item.inProgress && !item.inReview && !item.completed)
+                    if(item.accepted && !item.rejected && !item.inProgress && !item.inReview && !item.completed)
                         return item
                 })
             }
