@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|workable) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
+    slapp.message('view (all|workable|in progress) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -56,6 +56,12 @@ module.exports = (app) => {
             if(type === "workable") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.accepted)
+                        return item
+                })
+            }
+            if(type === "in progress") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.inProgress)
                         return item
                 })
             }
@@ -316,7 +322,7 @@ module.exports = (app) => {
                                 if(updatedWorkItemList == null)
                                     msg.say("Nothing Found!")
                                 else
-                                    msg.say("*" + workItemTitle + "* is now in progress").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
+                                    msg.say("*" + workItemTitle + "* is now in progress")
                                 })
                             })
                         }
