@@ -54,7 +54,7 @@ module.exports = (app) => {
             let workItemList = [];
 
             if(type === "workable") {
-                workItemList = dbworkItemList.every(function(item){
+                workItemList = dbworkItemList.filter(function(item){
                     if(item.accepted)
                         return item
                 })
