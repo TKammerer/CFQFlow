@@ -378,7 +378,7 @@ module.exports = (app) => {
                                             msg.say("*" + workItemTitle + "* is now in review")
                                             roleList.forEach(function(element){
                                                 msg.say('@'+element + ' *' + workItemTitle + '* changes safe to promote?')
-                                                msg.say('@'+element + ' Please reply "dev code review ' + workItemTitle + ' yes/no"')
+                                                msg.say('@'+element + ' Please reply "code review ' + workItemTitle + ' yes/no"')
                                             })
                                         })
                                     }
