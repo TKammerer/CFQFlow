@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|workable) work items', ['direct_mention', 'direct_message'], (msg, type) => {
+    slapp.message('view (all|workable) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
