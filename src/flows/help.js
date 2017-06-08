@@ -12,6 +12,7 @@ module.exports = (app) => {
   view (all|workable) work items
   remove work item (title) *[owners only]*
   (qa|dev) review (title) (yes|no)
+  work item (title)
   `
 
   slapp.command('/cfq', /^\s*help\s*$/, (msg) => {
