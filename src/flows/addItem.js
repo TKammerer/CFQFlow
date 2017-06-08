@@ -77,7 +77,7 @@ module.exports = (app) => {
                         return item
                 })
             }
-            if(type === "rejected") {
+            else if(type === "rejected") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.rejected)
                         return item
