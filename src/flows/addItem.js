@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|workable|in progress) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
+    slapp.message('view (all|workable|in progress|in review) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -61,7 +61,13 @@ module.exports = (app) => {
             }
             else if(type === "in progress") {
                 workItemList = dbworkItemList.filter(function(item){
-                    if(item.inProgress)
+                    if(item.inProgress && !item.inReview)
+                        return item
+                })
+            }
+            else if(type === "in review") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.inReview)
                         return item
                 })
             }
@@ -323,6 +329,59 @@ module.exports = (app) => {
                                     msg.say("Nothing Found!")
                                 else
                                     msg.say("*" + workItemTitle + "* is now in progress")
+                                })
+                            })
+                        }
+                        else
+                            msg.say("No Work Items Found!")
+                    })
+                }
+                else
+                    msg.say("Must be Developer!")
+            })
+        })
+    })
+
+    slapp.message('review item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+            kv.get("developers", (err, roleList) => {
+                if (err) return handleError(err, msg)
+
+                if(roleList.indexOf(data.user.name) !== -1){
+                    kv.get("workItems", (err, dbworkItemList) => {  
+                        let workItemList = [];
+
+                        if(dbworkItemList != null) {
+                            workItemList = dbworkItemList
+
+                            var workItem = workItemList.find(x => x.title === workItemTitle & x.inProgress)
+
+                            if(workItem == null){
+                                msg.say("Cannot find in progress item *" + workItemTitle + "*!")
+                                return
+                            }
+
+                            workItem.inReview = true
+
+                            kv.set("workItems", workItemList, (err) => {
+                                if (err) return handleError(err, msg)
+                                
+                                kv.get("workItems", (err, updatedWorkItemList) => {
+                                    if (err) return handleError(err, msg)
+                                    
+                                    if(updatedWorkItemList == null)
+                                        msg.say("Nothing Found!")
+                                    else {                                            
+                                        kv.get("dev reviewers", (err, roleList) => {
+                                            if (err) return handleError(err, msg)
+                                            
+                                            msg.say("*" + workItemTitle + "* is now in review")
+                                            roleList.forEach(function(element){
+                                                msg.say('@'+element + ' *' + workItemTitle + '* changes safe to promote?')
+                                                msg.say('@'+element + ' Please reply "dev code review ' + workItemTitle + ' yes/no"')
+                                            })
+                                        })
+                                    }
                                 })
                             })
                         }
