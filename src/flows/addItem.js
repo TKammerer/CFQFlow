@@ -395,6 +395,97 @@ module.exports = (app) => {
         })
     })
 
+    slapp.message('code review (.*) (yes|no)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, answer) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+            kv.get("dev reviewers", (err, roleList) => {
+                if (err) return handleError(err, msg)
+
+                if(roleList.indexOf(data.user.name) !== -1){
+                    kv.get("workItems", (err, dbworkItemList) => {  
+                        let workItemList = [];
+
+                        if(dbworkItemList != null) {
+                            workItemList = dbworkItemList
+
+                            var workItem = workItemList.find(x => x.title === workItemTitle & x.inReview)
+
+                            if(workItem == null){
+                                msg.say("Cannot find in review item *" + workItemTitle + "*!")
+                                return
+                            }
+
+                            workItem.codeReviewer = data.user.name
+
+                            if(answer === "yes"){
+                                workItem.completed = true
+                                kv.set("workItems", workItemList, (err) => {
+                                    if (err) return handleError(err, msg)
+                                    
+                                    kv.get("workItems", (err, updatedWorkItemList) => {
+                                        if (err) return handleError(err, msg)
+                                        
+                                        if(updatedWorkItemList == null)
+                                            msg.say("Nothing Found!")
+                                        else {                                            
+                                            kv.get("dev reviewers", (err, roleList) => {
+                                                if (err) return handleError(err, msg)
+                                                
+                                                msg.say("*" + workItemTitle + "* is now in completed!")
+                                                roleList.forEach(function(element){
+                                                    msg.say('@'+element + ' Please Merge *' + workItemTitle + '*.')
+                                                })
+                                            })
+                                        }
+                                    })
+                                })
+                            }
+                            else{
+                                workItem.inProgress = true
+                                kv.set("workItems", workItemList, (err) => {
+                                    if (err) return handleError(err, msg)
+                                    
+                                    kv.get("workItems", (err, updatedWorkItemList) => {
+                                        if (err) return handleError(err, msg)
+                                        
+                                        if(updatedWorkItemList == null)
+                                            msg.say("Nothing Found!")
+                                        else {                                            
+                                            kv.get("dev reviewers", (err, roleList) => {
+                                                if (err) return handleError(err, msg)
+                                                msg.say("*" + workItemTitle + "* is now in progress!")
+                                                let handleCodeReviewNoDTO = { title: workItemTitle, uName:data.user.name }
+                                                msg.say("Can you please give a quick explanation for @" + roleList[0]).route('handleCodeReviewNo', handleCodeReviewNoDTO)
+                                            })
+                                        }
+                                    })
+                                })
+                            }
+                        }
+                        else
+                            msg.say("No Work Items Found!")
+                    })
+                }
+                else
+                    msg.say("Must be Dev Reviewer!")
+            })
+        })
+    })
+
+    slapp.route('handleCodeReviewNo', (msg, handleCodeReviewNoDTO) => {
+        var text = (msg.body.event && msg.body.event.text) || ''
+
+        kv.get("workItems", (err, dbworkItemList) => {
+            var workItem = dbworkItemList.find(x => x.title === handleCodeReviewNoDTO.title)
+
+            workItem.codeReviewReason = text;
+
+            kv.set("workItems", dbworkItemList, (err) => {
+                if (err) return handleError(err, msg)
+                msg.say("Thanks!")
+            })
+        })
+    })
+
     function handleError (err, msg) {
     console.error(err)
 
