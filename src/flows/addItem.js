@@ -53,6 +53,8 @@ module.exports = (app) => {
 
             let workItemList = [];
 
+            msg.say("type: " + type)
+
             if(type === "workable") {
                 msg.say("Here")
                 workItemList = dbworkItemList.filter(function(item){
