@@ -47,10 +47,22 @@ module.exports = (app) => {
         })
     })
 
-    //Think about the visualization of the jso
-    slapp.message('view work items', ['direct_mention', 'direct_message'], (msg) => {
-        kv.get("workItems", (err, workItemList) => {
+    slapp.message('view (all|workable) work items', ['direct_mention', 'direct_message'], (msg, type) => {
+        kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
+
+            let workItemList = [];
+
+            if(type === "workable") {
+                workItemList = dbworkItemList.map(function(item){
+                    if(item.accepted)
+                        return item
+                })
+            }
+            else{
+                workItemList = dbworkItemList
+            }
+
 
             if(workItemList == null)
                 msg.say("Nothing Found!")
@@ -261,6 +273,49 @@ module.exports = (app) => {
             kv.set("workItems", dbworkItemList, (err) => {
                 if (err) return handleError(err, msg)
                 msg.say("Thanks!")
+            })
+        })
+    })
+
+    slapp.message('work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+        slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
+            kv.get("owners", (err, roleList) => {
+                if (err) return handleError(err, msg)
+
+                if(roleList.indexOf(data.user.name) !== -1){
+                    kv.get("workItems", (err, dbworkItemList) => {  
+                        let workItemList = [];
+
+                        if(dbworkItemList != null)
+                            workItemList = dbworkItemList;
+
+                        var workItem = workItemList.find(x => x.title === workItemTitle)
+
+                        if(workItem == null){
+                            msg.say("Cannot find *" + workItemTitle + "*!")
+                            return
+                        }
+
+                        let index = workItemList.indexOf(workItem)
+                        if(index !== -1)
+                            workItemList.splice(index, 1);
+
+                        kv.set("workItems", workItemList, (err) => {
+                            if (err) return handleError(err, msg)
+                            
+                            kv.get("workItems", (err, updatedWorkItemList) => {
+                                if (err) return handleError(err, msg)
+                                
+                            if(updatedWorkItemList == null)
+                                msg.say("Nothing Found!")
+                            else
+                                msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
+                            })
+                        })
+                    })
+                }
+                else
+                    msg.say("Must be owner!")
             })
         })
     })
