@@ -427,7 +427,7 @@ module.exports = (app) => {
                                         if(updatedWorkItemList == null)
                                             msg.say("Nothing Found!")
                                         else {                                            
-                                            kv.get("dev reviewers", (err, roleList) => {
+                                            kv.get("developers", (err, roleList) => {
                                                 if (err) return handleError(err, msg)
                                                 
                                                 msg.say("*" + workItemTitle + "* is now in completed!")
@@ -450,7 +450,7 @@ module.exports = (app) => {
                                         if(updatedWorkItemList == null)
                                             msg.say("Nothing Found!")
                                         else {                                            
-                                            kv.get("dev reviewers", (err, roleList) => {
+                                            kv.get("developers", (err, roleList) => {
                                                 if (err) return handleError(err, msg)
                                                 msg.say("*" + workItemTitle + "* is now in progress!")
                                                 let handleCodeReviewNoDTO = { title: workItemTitle, uName:data.user.name }
