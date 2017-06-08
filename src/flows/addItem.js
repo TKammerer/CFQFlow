@@ -418,6 +418,8 @@ module.exports = (app) => {
 
                             if(answer === "yes"){
                                 workItem.completed = true
+                                workItem.inProgress = false
+                                workItem.inReview = false
                                 kv.set("workItems", workItemList, (err) => {
                                     if (err) return handleError(err, msg)
                                     
@@ -441,6 +443,7 @@ module.exports = (app) => {
                             }
                             else{
                                 workItem.inProgress = true
+                                workItem.inReview = false
                                 kv.set("workItems", workItemList, (err) => {
                                     if (err) return handleError(err, msg)
                                     
