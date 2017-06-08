@@ -9,7 +9,7 @@ module.exports = (app) => {
   add myself (owners|qa reviewers|dev reviewers|developers)
   remove myself (owners|qa reviewers|dev reviewers|developers)
   new work item *[owners only]*
-  view (all|workable|in progress|in review) work items
+  view (all|workable|in progress|in review|complete) work items
   remove work item (title) *[owners only]*
   (qa|dev) review (title) (yes|no) *[dev/qa reviewers only]*
   work item (title) *[developers only]*

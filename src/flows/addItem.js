@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|workable|in progress|in review) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
+    slapp.message('view (all|workable|in progress|in review|complete) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -68,6 +68,12 @@ module.exports = (app) => {
             else if(type === "in review") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.inReview && !item.inProgress)
+                        return item
+                })
+            }
+            else if(type === "complete") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.completed)
                         return item
                 })
             }
@@ -480,7 +486,7 @@ module.exports = (app) => {
         kv.get("workItems", (err, dbworkItemList) => {
             var workItem = dbworkItemList.find(x => x.title === handleCodeReviewNoDTO.title)
 
-            workItem.codeReviewReason = workItem.codeReviewReason + "---" + text;
+            workItem.codeReviewReason = workItem.codeReviewReason + " --- " + text;
 
             kv.set("workItems", dbworkItemList, (err) => {
                 if (err) return handleError(err, msg)
