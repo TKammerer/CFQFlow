@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work items (all|rejected|workable|in progress|in review|complete)', ['message.channels'], (msg, text, type) => {
+    slapp.message('view work items (all|rejected|workable|in progress|in review|complete)', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -179,7 +179,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('(qa|dev) review (.*) (yes|no)', 'mention', (msg, text, role, item, answer) => {
+    slapp.message('(qa|dev) review (.*) (yes|no)', ['direct_mention', 'direct_message'], (msg, text, role, item, answer) => {
         if(role === 'dev') {
             slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
                 kv.get("dev reviewers", (err, roleList) => {
