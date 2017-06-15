@@ -4,17 +4,17 @@ module.exports = (app) => {
   let slapp = app.slapp
 
   let help = `
-  view (owner|reviewer|developer) role
-  view (owners|qa reviewers|dev reviewers|developers)
-  add myself (owners|qa reviewers|dev reviewers|developers)
-  remove myself (owners|qa reviewers|dev reviewers|developers)
-  new work item *[owners only]*
-  view (all|rejected|workable|in progress|in review|complete) work items
-  remove work item (title) *[owners only]*
-  (qa|dev) review (title) (yes|no) *[dev/qa reviewers only]*
-  work item (title) *[developers only]*
-  review item (title) *[developers only]*
-  code review (title) (yes|no) *[dev reviewers only]*
+  view role definition (owner|reviewer|developer)
+  view role assignment (owners|qa reviewers|dev reviewers|developers)
+  assign myself to (owners|qa reviewers|dev reviewers|developers)
+  remove myself from (owners|qa reviewers|dev reviewers|developers)
+  submit work item *[owners only]*
+  view work items (all|rejected|workable|in progress|in review|complete)
+  delete work item (work item title) *[owners only]*
+  (qa|dev) review (work item title) (yes|no) *[dev/qa reviewers only]*
+  begin work (work item title) *[developers only]*
+  request review (work item title) *[developers only]*
+  review work (work item title) (yes|no) *[dev reviewers only]*
   `
 
   slapp.command('/cfq', /^\s*help\s*$/, (msg) => {

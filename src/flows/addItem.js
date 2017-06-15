@@ -4,7 +4,7 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
-    slapp.message('remove work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+    slapp.message('delete work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("owners", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view (all|rejected|workable|in progress|in review|complete) work items', ['direct_mention', 'direct_message'], (msg, text, type) => {
+    slapp.message('view work items (all|rejected|workable|in progress|in review|complete)', ['direct_mention', 'direct_message'], (msg, text, type) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -98,7 +98,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('new work item', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('submit work item', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("owners", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -300,7 +300,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+    slapp.message('begin work (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("developers", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -354,7 +354,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('review item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+    slapp.message('request review (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("developers", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -407,7 +407,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('code review (.*) (yes|no)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, answer) => {
+    slapp.message('review work (.*) (yes|no)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, answer) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("dev reviewers", (err, roleList) => {
                 if (err) return handleError(err, msg)

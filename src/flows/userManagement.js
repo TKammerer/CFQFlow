@@ -4,7 +4,7 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
-    slapp.message('view (owner|reviewer|developer) role', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('view role definition (owner|reviewer|developer)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         if(role === "owner") {
             msg.say("```A small, predefined list of people who decide what work items are submitted to the CFQ, and what items are worked on. By limiting this list to a small number of people, it will serve to streamline and clarify the process of how things get into the CFQ, and who is responsible for deciding what gets worked on in the CFQ```")
         }
@@ -16,7 +16,7 @@ module.exports = (app) => {
         }
     })
 
-    slapp.message('view (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('view role assignment (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         kv.get(role, (err, roleList) => {
             if (err) return handleError(err, msg)
 
@@ -27,32 +27,44 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('add myself (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('assign myself to (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+        
+        let owners = ["tkammer", "jim.krall", "greg", "mjvarghese"]
+
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-            kv.get(role, (err, dbRoleList) => {
-            
-                let roleList = [];
+            let allowed = true
 
-                if(dbRoleList != null)
-                    roleList = dbRoleList;
-
-                roleList.push(data.user.name);
-
-                kv.set(role, roleList, (err) => {
-                    if (err) return handleError(err, msg)
-                    
-                    kv.get(role, (err, updatedRoleList) => {
-                        if (err) return handleError(err, msg)
-
-                        msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
-                    })
+            if(role == "owners") {
+                allowed = owners.some(function(item){
+                    return item == data.user.name;
                 })
-            })
+            }
+
+            if(allowed){
+                kv.get(role, (err, dbRoleList) => {            
+                    let roleList = [];
+
+                    if(dbRoleList != null)
+                        roleList = dbRoleList;
+
+                    roleList.push(data.user.name);
+
+                    kv.set(role, roleList, (err) => {
+                        if (err) return handleError(err, msg)
+                        
+                        kv.get(role, (err, updatedRoleList) => {
+                            if (err) return handleError(err, msg)
+
+                            msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
+                        })
+                    })
+                })    
+            }
         })
     })
 
-    slapp.message('remove myself (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
+    slapp.message('remove myself from (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
             kv.get(role, (err, dbRoleList) => {
