@@ -4,7 +4,7 @@ module.exports = (app) => {
   let slapp = app.slapp
   let kv = app.kv
 
-    slapp.message('delete work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+    slapp.message('cancel work item (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("owners", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -23,9 +23,9 @@ module.exports = (app) => {
                             return
                         }
 
-                        let index = workItemList.indexOf(workItem)
-                        if(index !== -1)
-                            workItemList.splice(index, 1);
+                        workItem.canceled = true;
+                        workItem.inProgress = false;
+                        workItem.inReview = false;
 
                         kv.set("workItems", workItemList, (err) => {
                             if (err) return handleError(err, msg)
@@ -36,7 +36,7 @@ module.exports = (app) => {
                             if(updatedWorkItemList == null)
                                 msg.say("Nothing Found!")
                             else
-                                msg.say("Removed " + workItemTitle + " from current work item list.").say("Current list: ").say(`\`\`\`${JSON.stringify(workItemList)}\`\`\``)
+                                msg.say("Canceled *" + workItemTitle + "*.")
                             })
                         })
                     })
@@ -55,7 +55,7 @@ module.exports = (app) => {
 
             if(type === "workable") {
                 workItemList = dbworkItemList.filter(function(item){
-                    if(item.accepted && !item.rejected && !item.inProgress && !item.inReview && !item.completed)
+                    if(item.accepted && !item.rejected && !item.inProgress && !item.inReview && !item.completed && !item.canceled)
                         return item
                 })
             }
@@ -80,6 +80,12 @@ module.exports = (app) => {
             else if(type === "rejected") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.rejected)
+                        return item
+                })
+            }
+            else if(type === "canceled") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.canceled)
                         return item
                 })
             }
@@ -123,7 +129,7 @@ module.exports = (app) => {
         
         state.title = text
 
-        msg.say(`Sounds good! Little description?`).route('new-item-desc', state)
+        msg.say(`Thanks! Description?`).route('new-item-desc', state)
     })
     .route('new-item-desc', (msg, state) => {
         var text = (msg.body.event && msg.body.event.text) || ''
@@ -155,11 +161,11 @@ module.exports = (app) => {
         kv.get("qa reviewers", (err, roleList) => {
             if (err) return handleError(err, msg)
 
-            msg.say('Thanks!').say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
+            msg.say('Accepted!')
 
             roleList.forEach(function(element){
                 msg.say('@'+element + ' *' + state.title + '* changes do not require QA or have automated test coverage?')
-                msg.say('@'+element + ' Please reply "qa review ' + state.title + ' yes/no"')
+                msg.say('@'+element + ' Please reply "qa review *' + state.title + '* yes/no"')
             })
             
             kv.get("dev reviewers", (err, roleList) => {
@@ -167,7 +173,7 @@ module.exports = (app) => {
 
                 roleList.forEach(function(element){
                     msg.say('@'+element + ' *' + state.title + '* changes constainted to one system?')
-                    msg.say('@'+element + ' Please reply "dev review ' + state.title + ' yes/no"')
+                    msg.say('@'+element + ' Please reply "dev review *' + state.title + '* yes/no"')
                 })
             })
         })

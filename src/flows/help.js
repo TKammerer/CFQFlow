@@ -10,7 +10,7 @@ module.exports = (app) => {
   remove myself from (owners|qa reviewers|dev reviewers|developers)
   submit work item *[owners only]*
   view work items (all|rejected|workable|in progress|in review|complete)
-  delete work item (work item title) *[owners only]*
+  cancel work item (work item title) *[owners only]*
   (qa|dev) review (work item title) (yes|no) *[dev/qa reviewers only]*
   begin work (work item title) *[developers only]*
   request review (work item title) *[developers only]*
