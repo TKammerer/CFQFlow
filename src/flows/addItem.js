@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work items (all|rejected|workable|in progress|in review|complete) (|detail|debug)', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, detail) => {
+    slapp.message('view work items (all|rejected|workable|in progress|in review|complete) (detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, detail) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -98,7 +98,7 @@ module.exports = (app) => {
             else {
                 msg.say("*" + type + "* work items:")
                 workItemList.forEach(function(element){
-                    msg.say(`\`\`\`"*Title:* "${element.title}"\n""*Description:* "${element.desc}\`\`\`\n`)
+                    msg.say(`\`\`\`Title: "${element.title}\nDescription: "${element.desc}\nRequestor: "${element.requestorName}\`\`\`\n`)
                     msg.say("Detail: " + detail)
                     //msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
                 })
