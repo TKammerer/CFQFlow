@@ -78,7 +78,7 @@ module.exports = (app) => {
                     if(index !== -1)
                         roleList.splice(index, 1);
 
-                let index1 = roleList.indexOf("kevinleclair")
+                let index1 = roleList.indexOf("jkinser")
                 roleList.splice(index1, 1);
 
                 kv.set(role, roleList, (err) => {
