@@ -353,6 +353,7 @@ module.exports = (app) => {
                                     msg.say("Nothing Found!")
                                 else
                                     msg.say("*" + workItemTitle + "* is now in progress")
+                                    msg.say('When ready for review reply "request review ' + workItemTitle + ' https://git.aarons.com/PullRequestURL"')
                                 })
                             })
                         }
@@ -403,7 +404,7 @@ module.exports = (app) => {
                                             msg.say("*" + workItemTitle + "* is now in review")
                                             roleList.forEach(function(element){
                                                 msg.say('@'+element + ' *' + workItemTitle + '* changes safe to promote?')
-                                                msg.say('@'+element + ' Please reply "review work ' + workItemTitle + ' yes/no"')
+                                                msg.say('@'+element + ' Please reply "review work *' + workItemTitle + '* yes/no"')
                                             })
                                         })
                                     }
