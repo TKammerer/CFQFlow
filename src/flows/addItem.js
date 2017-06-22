@@ -98,9 +98,9 @@ module.exports = (app) => {
             else {
                 msg.say("*" + type + "* work items:")
                 workItemList.forEach(function(element){
-                    if(detail == "debug")
+                    if(detail === "debug")
                         msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
-                    else if(detail = "detail")
+                    else if(detail === "detail")
                         msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
                     else
                         msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
