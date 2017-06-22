@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work items (all|rejected|workable|in progress|in review|complete)\s?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, detail) => {
+    slapp.message('view work items (all|rejected|canceled|workable|in progress|in review|complete)\s?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, detail) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -96,11 +96,15 @@ module.exports = (app) => {
             if(workItemList.length == 0)
                 msg.say("Nothing Found!")
             else {
-                msg.say("Detail: " + detail)
                 msg.say("*" + type + "* work items:")
                 workItemList.forEach(function(element){
-                    msg.say(`\`\`\`Title: "${element.title}\nDescription: "${element.desc}\nRequestor: "${element.requestorName}\`\`\`\n`)
-                    //msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
+                    if(detail == "debug")
+                        msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
+                    else if(detail = "detail")
+                        msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
+                    else
+                        msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
+
                 })
             }
         })
@@ -325,7 +329,7 @@ module.exports = (app) => {
                             })
 
                             if(inProgress){
-                                msg.say("WIP Limit Exceeded!")
+                                msg.say("Cannot begin *" + workItemTitle + "*. Too many items currently in progress.")
                                 return
                             }
 
@@ -398,7 +402,7 @@ module.exports = (app) => {
                                             msg.say("*" + workItemTitle + "* is now in review")
                                             roleList.forEach(function(element){
                                                 msg.say('@'+element + ' *' + workItemTitle + '* changes safe to promote?')
-                                                msg.say('@'+element + ' Please reply "code review ' + workItemTitle + ' yes/no"')
+                                                msg.say('@'+element + ' Please reply "review work ' + workItemTitle + ' yes/no"')
                                             })
                                         })
                                     }
