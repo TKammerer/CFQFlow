@@ -13,7 +13,7 @@ module.exports = (app) => {
   cancel work item (work item title) *[owners only]*
   (qa|dev) review (work item title) (yes|no) *[dev/qa reviewers only]*
   begin work (work item title) *[developers only]*
-  request review (work item title) *[developers only]*
+  request review (work item title) (https://git.aarons.com/PullRequestURL) *[developers only]*
   review work (work item title) (yes|no) *[dev reviewers only]*
   `
 

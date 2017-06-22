@@ -101,7 +101,7 @@ module.exports = (app) => {
                 workItemList.forEach(function(element){
                     if(detail === "debug")
                         msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
-                    else if(detail === "detail")
+                    else if(detail === "detail") //this will probably need to be status aware to show pertenant detail for the given status
                         msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
                     else
                         msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
@@ -367,7 +367,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('request review (.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle) => {
+    slapp.message('request review (.*) (https:\/\/git.aarons.com)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, pullRequestURL) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("developers", (err, roleList) => {
                 if (err) return handleError(err, msg)
@@ -387,6 +387,7 @@ module.exports = (app) => {
                             }
 
                             workItem.inReview = true
+                            workItem.pullRequestURL = pullRequestURL
 
                             kv.set("workItems", workItemList, (err) => {
                                 if (err) return handleError(err, msg)
