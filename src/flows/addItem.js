@@ -367,7 +367,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('request review (.*) (https:\/\/git.aarons.com)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, pullRequestURL) => {
+    slapp.message('request review (.*) (https:\/\/git.aarons.com.*)', ['direct_mention', 'direct_message'], (msg, text, workItemTitle, pullRequestURL) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("developers", (err, roleList) => {
                 if (err) return handleError(err, msg)
