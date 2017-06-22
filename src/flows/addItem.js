@@ -96,6 +96,7 @@ module.exports = (app) => {
             if(workItemList.length == 0)
                 msg.say("Nothing Found!")
             else {
+                msg.say("Detail: " + detail)
                 msg.say("*" + type + "* work items:")
                 workItemList.forEach(function(element){
                     if(detail === "debug")
