@@ -110,7 +110,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work item (.*)( )?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, workItemTitle, space, detail) => {
+    slapp.message('view work item (.*?)( )?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, workItemTitle, space, detail) => {
         kv.get("workItems", (err, dbworkItemList) => {  
             let workItemList = [];
 
