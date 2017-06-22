@@ -5,6 +5,7 @@ module.exports = (app) => {
   app.flows = {
     help: require('./help')(app),
     userManagement: require('./userManagement')(app),
-    addItem: require('./addItem')(app)
+    addItem: require('./addItem')(app),
+    dontunderstand: require('./dontunderstand')(app)
   }
 }

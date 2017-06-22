@@ -31,6 +31,5 @@ module.exports = (app) => {
             msg.say(data.user.name);
         })
   })
-
-  return {}
+  
 }
