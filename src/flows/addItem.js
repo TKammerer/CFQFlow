@@ -110,6 +110,32 @@ module.exports = (app) => {
         })
     })
 
+    slapp.message('view work item (.*)( )?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, workItem, space, detail) => {
+        kv.get("workItems", (err, dbworkItemList) => {  
+            let workItemList = [];
+
+            if(dbworkItemList != null) {
+                workItemList = dbworkItemList
+
+                var workItem = workItemList.find(x => x.title === workItemTitle)
+
+                if(workItem == null){
+                    msg.say("Cannot find item *" + workItemTitle + "*!")
+                    return
+                }
+
+                if(detail === "debug")
+                    msg.say(`\`\`\`${JSON.stringify(workItem)}\`\`\`\n`)
+                else if(detail === "detail") //this will probably need to be status aware to show pertenant detail for the given status
+                    msg.say(`\`\`\`Title: ${workItem.title}\nDescription: ${workItem.desc}\nRequestor: ${workItem.requestorName}\`\`\`\n`)
+                else
+                    msg.say(`\`\`\`Title: ${workItem.title}\nDescription: ${workItem.desc}\nRequestor: ${workItem.requestorName}\`\`\`\n`)
+            }
+            else
+                msg.say("No Work Items Found!")
+        })
+    })
+
     slapp.message('submit work item', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
             kv.get("owners", (err, roleList) => {

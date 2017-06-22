@@ -10,6 +10,7 @@ module.exports = (app) => {
   remove myself from (owners|qa reviewers|dev reviewers|developers)
   submit work item *[owners only]*
   view work items (all|rejected|canceled|workable|in progress|in review|complete) (detail|debug) <- Optional
+  view work item (work item title) (detail|debug)?
   cancel work item (work item title) *[owners only]*
   (qa|dev) review (work item title) (yes|no) *[dev/qa reviewers only]*
   begin work (work item title) *[developers only]*
@@ -31,5 +32,5 @@ module.exports = (app) => {
             msg.say(data.user.name);
         })
   })
-  
+
 }
