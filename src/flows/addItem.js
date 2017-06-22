@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work items (all|rejected|canceled|workable|in progress|in review|complete)\s?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, detail) => {
+    slapp.message('view work items (all|rejected|canceled|workable|in progress|in review|complete)\s?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, space, detail) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
