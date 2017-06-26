@@ -6,7 +6,7 @@ module.exports = (app) => {
   slapp.message('(.*)', ['direct_mention', 'direct_message'], (msg) => {    
     slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => {
         if (err) return msg.respond(`Sorry, something went wrong. Try again? (${err.message || err})`)
-            msg.say("Sorry " + data.user.name + ", I don't understand.");
+            msg.say("Sorry <@" + data.user.name + ">, I don't understand.");
         })
   })
 
