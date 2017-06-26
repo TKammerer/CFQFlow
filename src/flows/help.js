@@ -22,7 +22,7 @@ module.exports = (app) => {
     msg.respond(help)
   })
 
-  slapp.message('help', ['direct_mention', 'direct_message', 'ambient'], (msg, text) => {
+  slapp.message('help', ['direct_mention', 'direct_message'], (msg, text) => {
     msg.say(help)
   })
 
