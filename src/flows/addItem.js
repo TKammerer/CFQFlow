@@ -196,16 +196,16 @@ module.exports = (app) => {
             msg.say('Accepted!')
 
             roleList.forEach(function(element){
-                msg.say('@'+element + ' *' + state.title + '* changes do not require QA or have automated test coverage?')
-                msg.say('@'+element + ' Please reply "qa review *' + state.title + '* yes/no"')
+                msg.say('<@'+element + '> *' + state.title + '* changes do not require QA or have automated test coverage?')
+                msg.say('<@'+element + '> Please reply "qa review *' + state.title + '* yes/no"')
             })
             
             kv.get("dev reviewers", (err, roleList) => {
                 if (err) return handleError(err, msg)
 
                 roleList.forEach(function(element){
-                    msg.say('@'+element + ' *' + state.title + '* changes constainted to one system?')
-                    msg.say('@'+element + ' Please reply "dev review *' + state.title + '* yes/no"')
+                    msg.say('<@'+element + '> *' + state.title + '* changes constainted to one system?')
+                    msg.say('<@'+element + '> Please reply "dev review *' + state.title + '* yes/no"')
                 })
             })
         })
@@ -429,8 +429,8 @@ module.exports = (app) => {
                                             
                                             msg.say("*" + workItemTitle + "* is now in review")
                                             roleList.forEach(function(element){
-                                                msg.say('@'+element + ' *' + workItemTitle + '* changes safe to promote?')
-                                                msg.say('@'+element + ' Please reply "review work *' + workItemTitle + '* yes/no"')
+                                                msg.say('<@'+element + '> *' + workItemTitle + '* changes safe to promote?')
+                                                msg.say('<@'+element + '> Please reply "review work *' + workItemTitle + '* yes/no"')
                                             })
                                         })
                                     }
@@ -486,7 +486,7 @@ module.exports = (app) => {
                                                 
                                                 msg.say("*" + workItemTitle + "* is now in completed!")
                                                 roleList.forEach(function(element){
-                                                    msg.say('@'+element + ' Please Merge *' + workItemTitle + '*.')
+                                                    msg.say('<@'+element + '> Please Merge *' + workItemTitle + '*.')
                                                 })
                                             })
                                         }
@@ -509,7 +509,7 @@ module.exports = (app) => {
                                                 if (err) return handleError(err, msg)
                                                 msg.say("*" + workItemTitle + "* is now in progress!")
                                                 let handleCodeReviewNoDTO = { title: workItemTitle, uName:data.user.name }
-                                                msg.say("Can you please give a quick explanation for @" + roleList[0]).route('handleCodeReviewNo', handleCodeReviewNoDTO)
+                                                msg.say("Can you please give a quick explanation for <@" + roleList[0] + ">").route('handleCodeReviewNo', handleCodeReviewNoDTO)
                                             })
                                         }
                                     })
