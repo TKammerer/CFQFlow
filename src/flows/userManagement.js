@@ -16,14 +16,16 @@ module.exports = (app) => {
         }
     })
 
-    slapp.message('view role assignment (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
-        kv.get(role, (err, roleList) => {
+    slapp.message('view role assignment (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {      
+        let lowerRole = role.toLowerCase();
+
+        kv.get(lowerRole, (err, roleList) => {
             if (err) return handleError(err, msg)
 
             if(roleList == null)
                 msg.say("Nothing Found!")
             else
-                msg.say("Current " + role + " list: " + roleList)
+                msg.say("Current " + lowerRole + " list: " + roleList)
         })
     })
 
@@ -35,14 +37,16 @@ module.exports = (app) => {
 
             let allowed = true
 
-            if(role == "owners") {
+            let lowerRole = role.toLowerCase();
+
+            if(lowerRole == "owners") {
                 allowed = owners.some(function(item){
                     return item == data.user.name;
                 })
             }
 
-            if(allowed){
-                kv.get(role, (err, dbRoleList) => {            
+            if(allowed) {
+                kv.get(lowerRole, (err, dbRoleList) => {            
                     let roleList = [];
 
                     if(dbRoleList != null)
@@ -50,16 +54,19 @@ module.exports = (app) => {
 
                     roleList.push(data.user.name);
 
-                    kv.set(role, roleList, (err) => {
+                    kv.set(lowerRole, roleList, (err) => {
                         if (err) return handleError(err, msg)
                         
-                        kv.get(role, (err, updatedRoleList) => {
+                        kv.get(lowerRole, (err, updatedRoleList) => {
                             if (err) return handleError(err, msg)
 
-                            msg.say("Added " + data.user.name + " to role " + role).say("Current " + role + " list: " + updatedRoleList)
+                            msg.say("Added " + data.user.name + " to role " + lowerRole).say("Current " + lowerRole + " list: " + updatedRoleList)
                         })
                     })
                 })    
+            }
+            else {
+                msg.say("Not in allowed owner group.")
             }
         })
     })
@@ -67,7 +74,9 @@ module.exports = (app) => {
     slapp.message('remove myself from (owners|qa reviewers|dev reviewers|developers)', ['direct_mention', 'direct_message'], (msg, text, role) => {
         slapp.client.users.info({ token: msg.meta.bot_token, user: msg.meta.user_id }, (err, data) => { 
 
-            kv.get(role, (err, dbRoleList) => {
+            let lowerRole = role.toLowerCase();
+
+            kv.get(lowerRole, (err, dbRoleList) => {
             
                 let roleList = [];
 
@@ -82,13 +91,13 @@ module.exports = (app) => {
                 // let index1 = roleList.indexOf("jkinser")
                 // roleList.splice(index1, 1);
 
-                kv.set(role, roleList, (err) => {
+                kv.set(lowerRole, roleList, (err) => {
                     if (err) return handleError(err, msg)
                     
-                    kv.get(role, (err, updatedRoleList) => {
+                    kv.get(lowerRole, (err, updatedRoleList) => {
                         if (err) return handleError(err, msg)
 
-                        msg.say("Removed " + data.user.name + " from role " + role).say("Current " + role + " list: " + updatedRoleList)
+                        msg.say("Removed " + data.user.name + " from role " + lowerRole).say("Current " + lowerRole + " list: " + updatedRoleList)
                     })
                 })
             })
