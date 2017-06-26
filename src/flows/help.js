@@ -4,10 +4,13 @@ module.exports = (app) => {
   let slapp = app.slapp
 
   let help = `
+  *Documentation*
   view role definition (owner|reviewer|developer)
+  *User Management*
   view role assignment (owners|qa reviewers|dev reviewers|developers)
   assign myself to (owners|qa reviewers|dev reviewers|developers)
   remove myself from (owners|qa reviewers|dev reviewers|developers)
+  *Workflow*
   submit work item *[owners only]*
   view work items (all|rejected|canceled|workable|in progress|in review|complete) (detail|debug) <- Optional
   view work item (work item title) (detail|debug) <- Optional
