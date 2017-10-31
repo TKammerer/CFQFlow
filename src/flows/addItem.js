@@ -59,7 +59,7 @@ module.exports = (app) => {
                         return item
                 })
             }
-            if(type === "not approved") {
+            else if(type === "not approved") {
                 workItemList = dbworkItemList.filter(function(item){
                     if((item.qaApproved == null || item.devApproved == null) && !item.canceled && !item.rejected)
                         return item
