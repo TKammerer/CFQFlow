@@ -61,7 +61,7 @@ module.exports = (app) => {
             }
             if(type === "pre review") {
                 workItemList = dbworkItemList.filter(function(item){
-                    if(item.qaApproved == null || item.devApproved == null)
+                    if((item.qaApproved == null || item.devApproved == null) && !item.canceled && !item.rejected)
                         return item
                 })
             }
