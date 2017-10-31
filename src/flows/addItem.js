@@ -107,7 +107,7 @@ module.exports = (app) => {
                     if(detail === "debug")
                         msg.say(`\`\`\`${JSON.stringify(element)}\`\`\`\n`)
                     else if(detail === "detail") //this will probably need to be status aware to show pertenant detail for the given status
-                        msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\nDevApproved: ${element.devApproved}\nQAApproved: ${element.qaApproved}\`\`\`\n`)
+                        msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\nDevApproved: ${element.devApproved ? "Yes" : "No" }\nQAApproved: ${element.qaApproved  ? "Yes" : "No" }\`\`\`\n`)
                     else
                         msg.say(`\`\`\`Title: ${element.title}\nDescription: ${element.desc}\nRequestor: ${element.requestorName}\`\`\`\n`)
 
