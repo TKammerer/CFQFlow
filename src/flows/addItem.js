@@ -47,7 +47,7 @@ module.exports = (app) => {
         })
     })
 
-    slapp.message('view work items (all|rejected|canceled|workable|in progress|in review|complete)( )?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, space, detail) => {
+    slapp.message('view work items (all|rejected|canceled|pre review|workable|in progress|in review|complete)( )?(detail|debug)?', ['direct_mention', 'direct_message', 'ambient'], (msg, text, type, space, detail) => {
         kv.get("workItems", (err, dbworkItemList) => {
             if (err) return handleError(err, msg)
 
@@ -56,6 +56,12 @@ module.exports = (app) => {
             if(type === "workable") {
                 workItemList = dbworkItemList.filter(function(item){
                     if(item.accepted && !item.rejected && !item.inProgress && !item.inReview && !item.completed && !item.canceled)
+                        return item
+                })
+            }
+            if(type === "pre review") {
+                workItemList = dbworkItemList.filter(function(item){
+                    if(item.qaApproved == null || item.devApproved == null)
                         return item
                 })
             }
